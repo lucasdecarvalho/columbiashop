@@ -6,8 +6,12 @@ export default withAuth(
     const token = req.nextauth.token
     const pathname = req.nextUrl.pathname
 
-    if (pathname.startsWith('/admin') && token?.role !== 'admin') {
-      return NextResponse.redirect(new URL('/login?error=unauthorized', req.url))
+    if (
+      pathname.startsWith('/admin') &&
+      !pathname.startsWith('/admin/login') &&
+      token?.role !== 'admin'
+    ) {
+      return NextResponse.redirect(new URL('/admin/login?error=unauthorized', req.url))
     }
 
     if (pathname.startsWith('/minha-conta') && token?.role !== 'client') {
@@ -20,6 +24,7 @@ export default withAuth(
     callbacks: {
       authorized: ({ token, req }) => {
         const pathname = req.nextUrl.pathname
+        if (pathname.startsWith('/admin/login')) return true
         if (pathname.startsWith('/admin') || pathname.startsWith('/minha-conta')) {
           return !!token
         }

@@ -24,7 +24,6 @@ export default function LoginForm() {
   const searchParams = useSearchParams()
   const { withLoader } = useLoader()
   const [showPass, setShowPass] = useState(false)
-  const [role, setRole] = useState<'client' | 'admin'>('client')
 
   const {
     register,
@@ -34,7 +33,7 @@ export default function LoginForm() {
 
   const onSubmit = async (data: FormData) => {
     await withLoader(async () => {
-      const result = await signIn(role, {
+      const result = await signIn('client', {
         email: data.email,
         password: data.password,
         redirect: false,
@@ -46,7 +45,7 @@ export default function LoginForm() {
       }
 
       toast.success('Login realizado com sucesso!')
-      router.push(role === 'admin' ? '/admin' : '/catalogo')
+      router.push('/catalogo')
     })
   }
 
@@ -68,36 +67,11 @@ export default function LoginForm() {
         </div>
 
         <div className="rounded-2xl bg-white p-8 shadow-xl shadow-slate-200/50">
-          <div className="mb-6 flex rounded-xl bg-slate-100 p-1">
-            <button
-              type="button"
-              onClick={() => setRole('client')}
-              className={`flex-1 rounded-lg py-2 text-sm font-medium transition-all ${
-                role === 'client'
-                  ? 'bg-white text-slate-900 shadow-sm'
-                  : 'text-slate-500 hover:text-slate-700'
-              }`}
-            >
-              Cliente
-            </button>
-            <button
-              type="button"
-              onClick={() => setRole('admin')}
-              className={`flex-1 rounded-lg py-2 text-sm font-medium transition-all ${
-                role === 'admin'
-                  ? 'bg-white text-slate-900 shadow-sm'
-                  : 'text-slate-500 hover:text-slate-700'
-              }`}
-            >
-              Administrador
-            </button>
-          </div>
-
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
             <Input
               label="Email"
               type="email"
-              placeholder={role === 'admin' ? 'admin@columbia.shop' : 'tester@columbia.shop'}
+              placeholder="tester@columbia.shop"
               error={errors.email?.message}
               {...register('email')}
             />
