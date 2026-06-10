@@ -19,12 +19,15 @@ O ColumbiaShop é uma loja virtual focada em produtos de limpeza. O sistema cont
 - Dashboard com CRUD completo de produtos
 - Visualização e gestão de todos os pedidos
 
-**Credenciais de acesso (seed)**
+**Acessos principais**
+HK: https://columbiashophk.vercel.app
+PROD: https://columbiashop.vercel.app
 
-| Perfil | E-mail | Senha |
-|--------|--------|-------|
-| Cliente | `tester@columbia.shop` | `Columbia2026!@` |
-| Admin | `admin@columbia.shop` | `Columbia2026!@` |
+**Credenciais de acesso (seed)**
+| Perfil | URL de Acesso | E-mail | Senha |
+|--------|--------|-------|-------|
+| Cliente | https://columbiashop.vercel.app/login | `tester@columbia.shop` | `Columbia2026!@` |
+| Admin | https://columbiashop.vercel.app/admin | `admin@columbia.shop` | `Columbia2026!@` |
 
 ---
 
@@ -104,8 +107,6 @@ MP_ACCESS_TOKEN=TEST-...
 MP_PUBLIC_KEY=TEST-...
 MP_WEBHOOK_SECRET=...
 ```
-
-> **NEXTAUTH_SECRET** pode ser gerado com: `openssl rand -base64 32`
 
 ---
 
