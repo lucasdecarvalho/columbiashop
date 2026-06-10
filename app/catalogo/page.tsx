@@ -34,7 +34,7 @@ export default function CatalogoPage() {
 
   const handleAddToCart = (product: Product, qty = 1) => {
     add(product, qty)
-    toast.success(`${product.title} adicionado ao carrinho!`)
+    toast.success('Produto adicionado ao carrinho!')
   }
 
   return (
