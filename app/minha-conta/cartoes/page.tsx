@@ -15,10 +15,12 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 const schema = z.object({
   holderName: z.string().min(3, 'Nome obrigatório'),
-  lastFour: z.string().length(4, '4 dígitos'),
+  cardNumber: z.string().min(16, 'Número inválido'),
   brand: z.string().min(1, 'Bandeira obrigatória'),
   expiryMonth: z.string().min(1, 'Obrigatório'),
   expiryYear: z.string().min(4, 'Obrigatório'),
+  cvv: z.string().min(3, 'CVV inválido'),
+  cpf: z.string().min(11, 'CPF obrigatório'),
   isDefault: z.boolean().optional(),
 })
 
@@ -50,20 +52,23 @@ export default function MeusCartoesPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           holder_name: data.holderName,
-          last_four: data.lastFour,
+          card_number: data.cardNumber,
           brand: data.brand,
-          expiration_month: Number(data.expiryMonth),
-          expiration_year: Number(data.expiryYear),
+          expiration_month: data.expiryMonth,
+          expiration_year: data.expiryYear,
+          cvv: data.cvv,
+          cpf: data.cpf,
           is_default: data.isDefault || false,
         }),
       })
+      const result = await res.json()
       if (res.ok) {
         toast.success('Cartão adicionado!')
         setAddOpen(false)
         reset()
         fetchCards()
       } else {
-        toast.error('Erro ao adicionar cartão.')
+        toast.error(result.error || 'Erro ao adicionar cartão.')
       }
     })
   }
@@ -152,18 +157,18 @@ export default function MeusCartoesPage() {
 
       <Modal open={addOpen} onClose={() => setAddOpen(false)} title="Adicionar Cartão">
         <form onSubmit={handleSubmit(onAddCard)} className="flex flex-col gap-4">
-          <Input label="Nome no cartão" error={errors.holderName?.message} {...register('holderName')} />
-
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-slate-700">Últimos 4 dígitos</label>
+            <label className="text-sm font-medium text-slate-700">Número do Cartão</label>
             <IMaskInput
-              mask="0000"
+              mask="0000 0000 0000 0000"
               className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
-              placeholder="6351"
-              onAccept={(val) => setValue('lastFour', val)}
+              placeholder="0000 0000 0000 0000"
+              onAccept={(val) => setValue('cardNumber', val)}
             />
-            {errors.lastFour && <p className="text-xs text-red-500">{errors.lastFour.message}</p>}
+            {errors.cardNumber && <p className="text-xs text-red-500">{errors.cardNumber.message}</p>}
           </div>
+
+          <Input label="Nome no cartão" placeholder="Como está no cartão" error={errors.holderName?.message} {...register('holderName')} />
 
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-slate-700">Bandeira</label>
@@ -179,7 +184,7 @@ export default function MeusCartoesPage() {
             {errors.brand && <p className="text-xs text-red-500">{errors.brand.message}</p>}
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-3 gap-3">
             <div className="flex flex-col gap-1">
               <label className="text-sm font-medium text-slate-700">Mês</label>
               <IMaskInput
@@ -198,6 +203,27 @@ export default function MeusCartoesPage() {
                 onAccept={(val) => setValue('expiryYear', val)}
               />
             </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-medium text-slate-700">CVV</label>
+              <IMaskInput
+                mask="0000"
+                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+                placeholder="123"
+                onAccept={(val) => setValue('cvv', val)}
+              />
+              {errors.cvv && <p className="text-xs text-red-500">{errors.cvv.message}</p>}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-slate-700">CPF do Titular</label>
+            <IMaskInput
+              mask="000.000.000-00"
+              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+              placeholder="000.000.000-00"
+              onAccept={(val) => setValue('cpf', val)}
+            />
+            {errors.cpf && <p className="text-xs text-red-500">{errors.cpf.message}</p>}
           </div>
 
           <label className="flex items-center gap-2 text-sm text-slate-600">

@@ -30,13 +30,47 @@ export async function POST(req: NextRequest) {
   const db = createServerClient()
   const clientId = (session.user as any).id
 
-  if (body.is_default) {
+  // Create MP card token from full card data
+  const { card_number, cvv, cpf, holder_name, expiration_month, expiration_year, brand, is_default } = body
+
+  let mpToken: string | null = null
+  try {
+    const tokenRes = await fetch('https://api.mercadopago.com/v1/card_tokens', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.MP_ACCESS_TOKEN}`,
+      },
+      body: JSON.stringify({
+        card_number: card_number.replace(/\s/g, ''),
+        expiration_month: Number(expiration_month),
+        expiration_year: Number(expiration_year),
+        security_code: cvv,
+        cardholder: {
+          name: holder_name,
+          identification: { type: 'CPF', number: cpf.replace(/\D/g, '') },
+        },
+      }),
+    })
+    const tokenData = await tokenRes.json()
+    if (!tokenRes.ok) {
+      const msg = tokenData?.cause?.[0]?.description || tokenData?.message || 'Erro ao tokenizar cartão'
+      return NextResponse.json({ error: msg }, { status: 422 })
+    }
+    mpToken = tokenData.id
+  } catch {
+    return NextResponse.json({ error: 'Erro de conexão com o Mercado Pago' }, { status: 502 })
+  }
+
+  const last_four = card_number.replace(/\s/g, '').slice(-4)
+
+  if (is_default) {
     await db.from('cards').update({ is_default: false }).eq('client_id', clientId)
   }
 
   const { data, error } = await db
     .from('cards')
-    .insert({ ...body, client_id: clientId })
+    .insert({ holder_name, last_four, brand, expiration_month: Number(expiration_month), expiration_year: Number(expiration_year), is_default: is_default || false, mp_token: mpToken, client_id: clientId })
     .select()
     .single()
 
