@@ -26,8 +26,7 @@ export function Navbar() {
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600">
             <Package size={16} className="text-white" />
           </div>
-          <span className="text-lg font-bold tracking-tight text-slate-900">Columbia</span>
-          <span className="text-lg font-bold tracking-tight text-brand-600">Shop</span>
+          <span className="text-lg font-bold tracking-tight text-slate-900">Columbia<span className="text-brand-600">Shop</span></span>
         </Link>
 
         {/* Desktop nav */}

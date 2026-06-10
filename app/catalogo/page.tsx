@@ -77,7 +77,7 @@ export default function CatalogoPage() {
         </div>
 
         {/* Products */}
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+        <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
           <div className="mb-6 flex items-center justify-between">
             <h2 className="text-lg font-semibold text-slate-900">
               {filtered.length} produto{filtered.length !== 1 ? 's' : ''} encontrado{filtered.length !== 1 ? 's' : ''}
@@ -88,7 +88,7 @@ export default function CatalogoPage() {
               Nenhum produto encontrado
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {filtered.map((product) => (
                 <ProductCard
                   key={product.id}
