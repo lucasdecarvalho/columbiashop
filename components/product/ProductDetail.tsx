@@ -65,7 +65,7 @@ function DetailContent({ product, onClose, onAddToCart }: ProductDetailProps) {
           }}
         >
           <ShoppingCart size={16} />
-          Adicionar ao Carrinho
+          Adicionar
         </Button>
       </div>
     </div>
