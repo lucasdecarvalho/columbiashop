@@ -12,8 +12,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600">
               <Package size={16} className="text-white" />
             </div>
-            <span className="text-lg font-bold tracking-tight text-slate-900">Columbia</span>
-            <span className="text-lg font-bold tracking-tight text-brand-600">Shop</span>
+            <span className="text-lg font-bold tracking-tight text-slate-900">Columbia<span className="text-brand-600">Shop</span></span>
           </Link>
           <span className="rounded-full bg-brand-100 px-2.5 py-0.5 text-xs font-semibold text-brand-700">
             Admin
