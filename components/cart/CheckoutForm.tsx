@@ -14,12 +14,12 @@ import { useLoader } from '@/context/LoaderContext'
 import { useSession } from 'next-auth/react'
 
 const schema = z.object({
-  cardNumber: z.string().min(16, 'Número inválido'),
-  holderName: z.string().min(3, 'Nome obrigatório'),
-  expiryMonth: z.string().length(2, 'Mês inválido'),
-  expiryYear: z.string().length(4, 'Ano inválido'),
-  cvv: z.string().min(3, 'CVV inválido'),
-  cpf: z.string().min(11, 'CPF obrigatório'),
+  cardNumber: z.string().optional(),
+  holderName: z.string().optional(),
+  expiryMonth: z.string().optional(),
+  expiryYear: z.string().optional(),
+  cvv: z.string().optional(),
+  cpf: z.string().optional(),
 })
 
 type FormData = z.infer<typeof schema>
@@ -45,18 +45,28 @@ export function CheckoutForm({ items, total, onSuccess, savedCards }: CheckoutFo
   } = useForm<FormData>({ resolver: zodResolver(schema) })
 
   const onSubmit = async (data: FormData) => {
+    if (!useSavedCard) {
+      const num = data.cardNumber?.replace(/\s/g, '') || ''
+      if (num.length < 16) { toast.error('Número do cartão inválido'); return }
+      if (!data.holderName || data.holderName.length < 3) { toast.error('Nome no cartão obrigatório'); return }
+      if (!data.expiryMonth || data.expiryMonth.length < 2) { toast.error('Mês de validade inválido'); return }
+      if (!data.expiryYear || data.expiryYear.length < 4) { toast.error('Ano de validade inválido'); return }
+      if (!data.cvv || data.cvv.length < 3) { toast.error('CVV inválido'); return }
+      if (!data.cpf || data.cpf.replace(/\D/g, '').length < 11) { toast.error('CPF obrigatório'); return }
+    }
+
     await withLoader(async () => {
       try {
         const payload = useSavedCard && selectedCard
           ? { savedCardId: selectedCard.id, items, total }
           : {
               card: {
-                number: data.cardNumber.replace(/\s/g, ''),
-                holderName: data.holderName,
+                number: (data.cardNumber || '').replace(/\s/g, ''),
+                holderName: data.holderName!,
                 expiryMonth: Number(data.expiryMonth),
                 expiryYear: Number(data.expiryYear),
-                cvv: data.cvv,
-                cpf: data.cpf.replace(/\D/g, ''),
+                cvv: data.cvv!,
+                cpf: (data.cpf || '').replace(/\D/g, ''),
               },
               items,
               total,
