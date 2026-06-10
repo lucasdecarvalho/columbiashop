@@ -10,8 +10,8 @@ export default function AdminDadosPage() {
   return (
     <div>
       <div className="mb-6 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100">
-          <User size={18} className="text-indigo-600" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-100">
+          <User size={18} className="text-brand-600" />
         </div>
         <div>
           <h1 className="text-xl font-bold text-slate-900">Meus Dados</h1>
@@ -21,7 +21,7 @@ export default function AdminDadosPage() {
 
       <div className="rounded-2xl bg-white p-6 shadow-sm border border-slate-100 max-w-md">
         <div className="flex flex-col gap-4">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-700 text-2xl font-bold text-white shadow-md">
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-2xl font-bold text-white shadow-md">
             {user?.name?.[0] || 'A'}
           </div>
           <div className="flex flex-col gap-3">

@@ -94,7 +94,7 @@ export function CheckoutForm({ items, total, onSuccess, savedCards }: CheckoutFo
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
       <div className="rounded-xl bg-slate-50 p-4">
         <p className="text-sm font-medium text-slate-500">Total a pagar</p>
-        <p className="text-3xl font-bold text-indigo-600">{formatCurrency(total)}</p>
+        <p className="text-3xl font-bold text-brand-600">{formatCurrency(total)}</p>
       </div>
 
       {savedCards.length > 0 && (
@@ -104,7 +104,7 @@ export function CheckoutForm({ items, total, onSuccess, savedCards }: CheckoutFo
             onClick={() => setUseSavedCard(true)}
             className={`flex-1 rounded-xl border px-4 py-3 text-sm font-medium transition-all ${
               useSavedCard
-                ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                ? 'border-brand-500 bg-brand-50 text-brand-700'
                 : 'border-slate-200 text-slate-600 hover:border-slate-300'
             }`}
           >
@@ -115,7 +115,7 @@ export function CheckoutForm({ items, total, onSuccess, savedCards }: CheckoutFo
             onClick={() => setUseSavedCard(false)}
             className={`flex-1 rounded-xl border px-4 py-3 text-sm font-medium transition-all ${
               !useSavedCard
-                ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                ? 'border-brand-500 bg-brand-50 text-brand-700'
                 : 'border-slate-200 text-slate-600 hover:border-slate-300'
             }`}
           >
@@ -131,7 +131,7 @@ export function CheckoutForm({ items, total, onSuccess, savedCards }: CheckoutFo
               key={card.id}
               className={`flex cursor-pointer items-center gap-3 rounded-xl border p-4 transition-all ${
                 selectedCard?.id === card.id
-                  ? 'border-indigo-500 bg-indigo-50'
+                  ? 'border-brand-500 bg-brand-50'
                   : 'border-slate-200 hover:border-slate-300'
               }`}
             >
@@ -140,7 +140,7 @@ export function CheckoutForm({ items, total, onSuccess, savedCards }: CheckoutFo
                 name="savedCard"
                 checked={selectedCard?.id === card.id}
                 onChange={() => setSelectedCard(card)}
-                className="accent-indigo-600"
+                className="accent-brand-600"
               />
               <CreditCard size={18} className="text-slate-400" />
               <div>
@@ -160,7 +160,7 @@ export function CheckoutForm({ items, total, onSuccess, savedCards }: CheckoutFo
             <label className="text-sm font-medium text-slate-700">Número do Cartão</label>
             <IMaskInput
               mask="0000 0000 0000 0000"
-              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
               placeholder="0000 0000 0000 0000"
               onAccept={(val) => setValue('cardNumber', val)}
             />
@@ -179,7 +179,7 @@ export function CheckoutForm({ items, total, onSuccess, savedCards }: CheckoutFo
               <label className="text-sm font-medium text-slate-700">Mês</label>
               <IMaskInput
                 mask="00"
-                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                 placeholder="MM"
                 onAccept={(val) => setValue('expiryMonth', val)}
               />
@@ -189,7 +189,7 @@ export function CheckoutForm({ items, total, onSuccess, savedCards }: CheckoutFo
               <label className="text-sm font-medium text-slate-700">Ano</label>
               <IMaskInput
                 mask="0000"
-                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                 placeholder="AAAA"
                 onAccept={(val) => setValue('expiryYear', val)}
               />
@@ -199,7 +199,7 @@ export function CheckoutForm({ items, total, onSuccess, savedCards }: CheckoutFo
               <label className="text-sm font-medium text-slate-700">CVV</label>
               <IMaskInput
                 mask="0000"
-                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                 placeholder="123"
                 onAccept={(val) => setValue('cvv', val)}
               />
@@ -211,7 +211,7 @@ export function CheckoutForm({ items, total, onSuccess, savedCards }: CheckoutFo
             <label className="text-sm font-medium text-slate-700">CPF do Titular</label>
             <IMaskInput
               mask="000.000.000-00"
-              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
               placeholder="000.000.000-00"
               onAccept={(val) => setValue('cpf', val)}
             />

@@ -23,11 +23,11 @@ export function Navbar() {
     <header className="sticky top-0 z-40 border-b border-slate-100 bg-white/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
         <Link href="/catalogo" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600">
             <Package size={16} className="text-white" />
           </div>
           <span className="text-lg font-bold tracking-tight text-slate-900">Columbia</span>
-          <span className="text-lg font-bold tracking-tight text-indigo-600">Shop</span>
+          <span className="text-lg font-bold tracking-tight text-brand-600">Shop</span>
         </Link>
 
         {/* Desktop nav */}
@@ -39,7 +39,7 @@ export function Navbar() {
               className={cn(
                 'relative rounded-lg px-3 py-2 text-sm font-medium transition-colors',
                 pathname === link.href
-                  ? 'text-indigo-600'
+                  ? 'text-brand-600'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
               )}
             >
@@ -48,7 +48,7 @@ export function Navbar() {
                   <ShoppingCart size={16} />
                   Carrinho
                   {count > 0 && (
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-[10px] font-bold text-white">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-brand-600 text-[10px] font-bold text-white">
                       {count}
                     </span>
                   )}
@@ -79,7 +79,7 @@ export function Navbar() {
           ) : (
             <Link
               href="/login"
-              className="ml-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 transition-colors"
+              className="ml-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
             >
               Entrar
             </Link>
@@ -91,7 +91,7 @@ export function Navbar() {
           <Link href="/carrinho" className="relative p-2 text-slate-600">
             <ShoppingCart size={20} />
             {count > 0 && (
-              <span className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-indigo-600 text-[9px] font-bold text-white">
+              <span className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-brand-600 text-[9px] font-bold text-white">
                 {count}
               </span>
             )}
@@ -141,7 +141,7 @@ export function Navbar() {
               ) : (
                 <Link
                   href="/login"
-                  className="rounded-lg px-3 py-2.5 text-sm font-medium text-indigo-600"
+                  className="rounded-lg px-3 py-2.5 text-sm font-medium text-brand-600"
                   onClick={() => setMobileOpen(false)}
                 >
                   Entrar

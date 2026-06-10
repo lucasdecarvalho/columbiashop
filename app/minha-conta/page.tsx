@@ -58,8 +58,8 @@ export default function MeusDadosPage() {
   return (
     <div>
       <div className="mb-6 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100">
-          <User size={18} className="text-indigo-600" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-100">
+          <User size={18} className="text-brand-600" />
         </div>
         <div>
           <h1 className="text-xl font-bold text-slate-900">Meus Dados</h1>
@@ -75,7 +75,7 @@ export default function MeusDadosPage() {
             <label className="text-sm font-medium text-slate-700">Celular</label>
             <IMaskInput
               mask="(00) 00000-0000"
-              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
               placeholder="(11) 99999-9999"
               defaultValue={client?.phone || ''}
               onAccept={(val) => setValue('phone', val)}
@@ -86,7 +86,7 @@ export default function MeusDadosPage() {
             <label className="text-sm font-medium text-slate-700">CPF</label>
             <IMaskInput
               mask="000.000.000-00"
-              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
               placeholder="000.000.000-00"
               defaultValue={client?.cpf || ''}
               onAccept={(val) => setValue('cpf', val)}

@@ -46,7 +46,7 @@ export default function CarrinhoPage() {
             </Link>
             <h1 className="text-2xl font-bold text-slate-900">Carrinho</h1>
             {count > 0 && (
-              <span className="rounded-full bg-indigo-600 px-2.5 py-0.5 text-xs font-bold text-white">
+              <span className="rounded-full bg-brand-600 px-2.5 py-0.5 text-xs font-bold text-white">
                 {count}
               </span>
             )}
@@ -101,7 +101,7 @@ export default function CarrinhoPage() {
                     <div className="my-2 border-t border-slate-100" />
                     <div className="flex justify-between text-base font-bold text-slate-900">
                       <span>Total</span>
-                      <span className="text-indigo-600">{formatCurrency(total)}</span>
+                      <span className="text-brand-600">{formatCurrency(total)}</span>
                     </div>
                   </div>
                   <Button className="mt-4 w-full" size="lg" onClick={handleCheckout}>

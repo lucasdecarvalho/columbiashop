@@ -27,7 +27,7 @@ export function CartItemRow({ item, onUpdate, onRemove }: CartItemProps) {
       <div className="flex flex-1 flex-col justify-between">
         <div>
           <h3 className="text-sm font-semibold text-slate-900 line-clamp-1">{item.product.title}</h3>
-          <p className="text-sm text-indigo-600 font-medium mt-0.5">
+          <p className="text-sm text-brand-600 font-medium mt-0.5">
             {formatCurrency(item.product.price)}
           </p>
         </div>

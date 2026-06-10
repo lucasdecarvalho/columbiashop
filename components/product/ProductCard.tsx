@@ -54,7 +54,7 @@ export function ProductCard({ product, onViewDetail, onAddToCart }: ProductCardP
 
       <div className="flex flex-1 flex-col p-4">
         <h3
-          className="cursor-pointer text-sm font-semibold text-slate-900 line-clamp-2 hover:text-indigo-600 transition-colors"
+          className="cursor-pointer text-sm font-semibold text-slate-900 line-clamp-2 hover:text-brand-600 transition-colors"
           onClick={() => onViewDetail(product)}
         >
           {product.title}
@@ -62,7 +62,7 @@ export function ProductCard({ product, onViewDetail, onAddToCart }: ProductCardP
         <p className="mt-1 text-xs text-slate-400 line-clamp-2">{product.description}</p>
 
         <div className="mt-3 flex items-center justify-between">
-          <span className="text-lg font-bold text-indigo-600">{formatCurrency(product.price)}</span>
+          <span className="text-lg font-bold text-brand-600">{formatCurrency(product.price)}</span>
           <span className="text-xs text-slate-400">{product.stock} em estoque</span>
         </div>
 

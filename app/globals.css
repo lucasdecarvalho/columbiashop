@@ -10,13 +10,18 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Brand color — azul Columbia #1A8FE3 */
+  --color-brand-50:  #e8f4fd;
+  --color-brand-100: #cce6fb;
+  --color-brand-200: #99cdf7;
+  --color-brand-300: #5fb0f1;
+  --color-brand-400: #2f97ea;
+  --color-brand-500: #1a8fe3;
+  --color-brand-600: #147fcc;
+  --color-brand-700: #0f6aa8;
+  --color-brand-800: #0b5384;
+  --color-brand-900: #073c60;
 }
 
 body {

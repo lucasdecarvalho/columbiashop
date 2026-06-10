@@ -50,18 +50,18 @@ export default function LoginForm() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 to-indigo-50 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 to-brand-50 p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md"
       >
         <div className="mb-8 flex flex-col items-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-600 shadow-lg shadow-indigo-200">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-600 shadow-lg shadow-brand-200">
             <Package size={24} className="text-white" />
           </div>
           <h1 className="mt-4 text-2xl font-bold text-slate-900">
-            Columbia<span className="text-indigo-600">Shop</span>
+            Columbia<span className="text-brand-600">Shop</span>
           </h1>
           <p className="mt-1 text-sm text-slate-500">Entre na sua conta para continuar</p>
         </div>

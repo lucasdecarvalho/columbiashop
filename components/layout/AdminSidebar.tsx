@@ -27,7 +27,7 @@ export function AdminSidebar() {
             className={cn(
               'flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-all whitespace-nowrap',
               pathname === href
-                ? 'bg-indigo-50 text-indigo-700'
+                ? 'bg-brand-50 text-brand-700'
                 : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
             )}
           >

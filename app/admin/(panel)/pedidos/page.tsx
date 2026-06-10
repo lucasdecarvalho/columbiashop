@@ -19,8 +19,8 @@ export default function AdminPedidosPage() {
   return (
     <div>
       <div className="mb-6 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100">
-          <ShoppingBag size={18} className="text-indigo-600" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-100">
+          <ShoppingBag size={18} className="text-brand-600" />
         </div>
         <div>
           <h1 className="text-xl font-bold text-slate-900">Pedidos</h1>
