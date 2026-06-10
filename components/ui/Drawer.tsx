@@ -1,7 +1,7 @@
 'use client'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X } from 'lucide-react'
-import { ReactNode } from 'react'
+import { ReactNode, useEffect } from 'react'
 
 interface DrawerProps {
   open: boolean
@@ -12,6 +12,11 @@ interface DrawerProps {
 }
 
 export function Drawer({ open, onClose, children, footer, title }: DrawerProps) {
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [open])
+
   return (
     <AnimatePresence>
       {open && (
