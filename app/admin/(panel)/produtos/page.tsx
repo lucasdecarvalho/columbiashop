@@ -93,54 +93,48 @@ export default function AdminProdutosPage() {
         </Button>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="flex flex-col gap-2">
         <AnimatePresence>
           {products.map((product) => (
             <motion.div
               key={product.id}
-              initial={{ opacity: 0, y: 8 }}
+              initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="rounded-2xl border border-slate-100 bg-white shadow-sm overflow-hidden"
+              exit={{ opacity: 0, x: -8 }}
+              className="flex items-center gap-4 rounded-2xl border border-slate-100 bg-white p-3 shadow-sm"
             >
-              {product.image_url && (
-                <div className="relative aspect-video w-full bg-slate-50">
+              {product.image_url ? (
+                <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-slate-50">
                   <Image
                     src={product.image_url}
                     alt={product.title}
                     fill
                     className="object-cover"
-                    sizes="(max-width: 640px) 100vw, 350px"
+                    sizes="56px"
                   />
                 </div>
+              ) : (
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-slate-100">
+                  <Package size={20} className="text-slate-400" />
+                </div>
               )}
-              <div className="p-4">
-                <h3 className="font-semibold text-slate-900 line-clamp-1">{product.title}</h3>
-                <p className="mt-1 text-xs text-slate-400 line-clamp-2">{product.description}</p>
-                <div className="mt-3 flex items-center justify-between">
-                  <span className="text-base font-bold text-brand-600">{formatCurrency(product.price)}</span>
-                  <span className={`text-xs font-medium ${product.stock === 0 ? 'text-red-500' : 'text-slate-400'}`}>
+              <div className="flex-1 min-w-0">
+                <p className="truncate text-sm font-semibold text-slate-900">{product.title}</p>
+                <p className="mt-0.5 flex items-center gap-3 text-xs text-slate-400">
+                  <span className="font-semibold text-brand-600">{formatCurrency(product.price)}</span>
+                  <span className={product.stock === 0 ? 'text-red-500' : ''}>
                     {product.stock} em estoque
                   </span>
-                </div>
-                <div className="mt-3 flex gap-2">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    className="flex-1"
-                    onClick={() => setEditProduct(product)}
-                  >
-                    <Pencil size={12} />
-                    Editar
-                  </Button>
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={() => setDeleteId(product.id)}
-                  >
-                    <Trash2 size={12} />
-                  </Button>
-                </div>
+                </p>
+              </div>
+              <div className="flex shrink-0 items-center gap-2">
+                <Button variant="secondary" size="sm" onClick={() => setEditProduct(product)}>
+                  <Pencil size={12} />
+                  Editar
+                </Button>
+                <Button variant="danger" size="sm" onClick={() => setDeleteId(product.id)}>
+                  <Trash2 size={12} />
+                </Button>
               </div>
             </motion.div>
           ))}

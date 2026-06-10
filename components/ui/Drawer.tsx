@@ -33,13 +33,13 @@ export function Drawer({ open, onClose, children, title }: DrawerProps) {
             onDragEnd={(_, info) => {
               if (info.offset.y > 120) onClose()
             }}
-            className="fixed bottom-0 left-0 right-0 z-50 max-h-[90vh] overflow-hidden rounded-t-3xl bg-white shadow-2xl"
+            className="fixed bottom-0 left-0 right-0 z-50 flex flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl" style={{ height: '93dvh' }}
           >
-            <div className="flex justify-center pt-3 pb-1">
+            <div className="flex justify-center pt-3 pb-1 shrink-0">
               <div className="h-1 w-12 rounded-full bg-slate-300" />
             </div>
             {title && (
-              <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
+              <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4 shrink-0">
                 <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
                 <button
                   onClick={onClose}
@@ -49,7 +49,7 @@ export function Drawer({ open, onClose, children, title }: DrawerProps) {
                 </button>
               </div>
             )}
-            <div className="overflow-y-auto max-h-[80vh] px-6 pb-8">{children}</div>
+            <div className="flex-1 overflow-y-auto px-6 pb-8">{children}</div>
           </motion.div>
         </>
       )}

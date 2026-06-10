@@ -22,7 +22,7 @@ function DetailContent({ product, onClose, onAddToCart }: ProductDetailProps) {
   return (
     <div className="flex flex-col gap-4">
       {product.image_url && (
-        <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-slate-50">
+        <div className="relative w-full overflow-hidden rounded-xl bg-slate-50" style={{ aspectRatio: '4/3' }}>
           <Image
             src={product.image_url}
             alt={product.title}
