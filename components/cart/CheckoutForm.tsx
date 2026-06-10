@@ -1,28 +1,10 @@
 'use client'
-import { useState, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { IMaskInput } from 'react-imask'
 import { CreditCard, Lock } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
 import { Card, CartItem } from '@/types'
 import { formatCurrency } from '@/lib/utils'
 import { toast } from 'sonner'
 import { useLoader } from '@/context/LoaderContext'
-import { useSession } from 'next-auth/react'
-
-const schema = z.object({
-  cardNumber: z.string().optional(),
-  holderName: z.string().optional(),
-  expiryMonth: z.string().optional(),
-  expiryYear: z.string().optional(),
-  cvv: z.string().optional(),
-  cpf: z.string().optional(),
-})
-
-type FormData = z.infer<typeof schema>
 
 interface CheckoutFormProps {
   items: CartItem[]
@@ -33,49 +15,15 @@ interface CheckoutFormProps {
 
 export function CheckoutForm({ items, total, onSuccess, savedCards }: CheckoutFormProps) {
   const { withLoader } = useLoader()
-  const { data: session } = useSession()
-  const [useSavedCard, setUseSavedCard] = useState(savedCards.length > 0)
-  const [selectedCard, setSelectedCard] = useState<Card | null>(savedCards.find(c => c.is_default) || savedCards[0] || null)
+  const card = savedCards.find(c => c.is_default) || savedCards[0] || null
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm<FormData>({ resolver: zodResolver(schema) })
-
-  const onSubmit = async (data: FormData) => {
-    if (!useSavedCard) {
-      const num = data.cardNumber?.replace(/\s/g, '') || ''
-      if (num.length < 16) { toast.error('Número do cartão inválido'); return }
-      if (!data.holderName || data.holderName.length < 3) { toast.error('Nome no cartão obrigatório'); return }
-      if (!data.expiryMonth || data.expiryMonth.length < 2) { toast.error('Mês de validade inválido'); return }
-      if (!data.expiryYear || data.expiryYear.length < 4) { toast.error('Ano de validade inválido'); return }
-      if (!data.cvv || data.cvv.length < 3) { toast.error('CVV inválido'); return }
-      if (!data.cpf || data.cpf.replace(/\D/g, '').length < 11) { toast.error('CPF obrigatório'); return }
-    }
-
+  const handlePay = async () => {
     await withLoader(async () => {
       try {
-        const payload = useSavedCard && selectedCard
-          ? { savedCardId: selectedCard.id, items, total }
-          : {
-              card: {
-                number: (data.cardNumber || '').replace(/\s/g, ''),
-                holderName: data.holderName!,
-                expiryMonth: Number(data.expiryMonth),
-                expiryYear: Number(data.expiryYear),
-                cvv: data.cvv!,
-                cpf: (data.cpf || '').replace(/\D/g, ''),
-              },
-              items,
-              total,
-            }
-
         const res = await fetch('/api/checkout', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
+          body: JSON.stringify({ items, total, savedCardId: card?.id }),
         })
 
         const result = await res.json()
@@ -85,15 +33,8 @@ export function CheckoutForm({ items, total, onSuccess, savedCards }: CheckoutFo
           return
         }
 
-        if (result.status === 'approved') {
-          toast.success('Pagamento aprovado! Pedido realizado com sucesso.')
-          onSuccess()
-        } else if (result.status === 'in_process' || result.status === 'pending') {
-          toast.success('Pedido criado! Aguardando confirmação do pagamento.')
-          onSuccess()
-        } else {
-          toast.error('Pagamento não aprovado. Verifique os dados do cartão.')
-        }
+        toast.success('Pagamento aprovado! Pedido realizado com sucesso.')
+        onSuccess()
       } catch {
         toast.error('Erro de conexão. Tente novamente.')
       }
@@ -101,142 +42,39 @@ export function CheckoutForm({ items, total, onSuccess, savedCards }: CheckoutFo
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6">
       <div className="rounded-xl bg-slate-50 p-4">
         <p className="text-sm font-medium text-slate-500">Total a pagar</p>
         <p className="text-3xl font-bold text-brand-600">{formatCurrency(total)}</p>
       </div>
 
-      {savedCards.length > 0 && (
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={() => setUseSavedCard(true)}
-            className={`flex-1 rounded-xl border px-4 py-3 text-sm font-medium transition-all ${
-              useSavedCard
-                ? 'border-brand-500 bg-brand-50 text-brand-700'
-                : 'border-slate-200 text-slate-600 hover:border-slate-300'
-            }`}
-          >
-            Cartão salvo
-          </button>
-          <button
-            type="button"
-            onClick={() => setUseSavedCard(false)}
-            className={`flex-1 rounded-xl border px-4 py-3 text-sm font-medium transition-all ${
-              !useSavedCard
-                ? 'border-brand-500 bg-brand-50 text-brand-700'
-                : 'border-slate-200 text-slate-600 hover:border-slate-300'
-            }`}
-          >
-            Novo cartão
-          </button>
-        </div>
-      )}
-
-      {useSavedCard && savedCards.length > 0 ? (
-        <div className="flex flex-col gap-2">
-          {savedCards.map((card) => (
-            <label
-              key={card.id}
-              className={`flex cursor-pointer items-center gap-3 rounded-xl border p-4 transition-all ${
-                selectedCard?.id === card.id
-                  ? 'border-brand-500 bg-brand-50'
-                  : 'border-slate-200 hover:border-slate-300'
-              }`}
-            >
-              <input
-                type="radio"
-                name="savedCard"
-                checked={selectedCard?.id === card.id}
-                onChange={() => setSelectedCard(card)}
-                className="accent-brand-600"
-              />
-              <CreditCard size={18} className="text-slate-400" />
-              <div>
-                <p className="text-sm font-medium text-slate-900 capitalize">
-                  {card.brand} •••• {card.last_four}
-                </p>
-                <p className="text-xs text-slate-400">
-                  {card.holder_name} · {card.expiration_month}/{card.expiration_year}
-                </p>
-              </div>
-            </label>
-          ))}
+      {card ? (
+        <div className="flex items-center gap-4 rounded-xl border border-brand-200 bg-brand-50 p-4">
+          <div className="flex h-12 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-slate-700 to-slate-900 shadow-md">
+            <CreditCard size={20} className="text-white" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-slate-900 capitalize">
+              {card.brand} •••• {card.last_four}
+            </p>
+            <p className="text-xs text-slate-400">
+              {card.holder_name} · {card.expiration_month}/{card.expiration_year}
+            </p>
+          </div>
         </div>
       ) : (
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-slate-700">Número do Cartão</label>
-            <IMaskInput
-              mask="0000 0000 0000 0000"
-              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
-              placeholder="0000 0000 0000 0000"
-              onAccept={(val) => setValue('cardNumber', val)}
-            />
-            {errors.cardNumber && <p className="text-xs text-red-500">{errors.cardNumber.message}</p>}
-          </div>
-
-          <Input
-            label="Nome no Cartão"
-            placeholder="Como está escrito no cartão"
-            error={errors.holderName?.message}
-            {...register('holderName')}
-          />
-
-          <div className="grid grid-cols-3 gap-3">
-            <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-slate-700">Mês</label>
-              <IMaskInput
-                mask="00"
-                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
-                placeholder="MM"
-                onAccept={(val) => setValue('expiryMonth', val)}
-              />
-              {errors.expiryMonth && <p className="text-xs text-red-500">{errors.expiryMonth.message}</p>}
-            </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-slate-700">Ano</label>
-              <IMaskInput
-                mask="0000"
-                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
-                placeholder="AAAA"
-                onAccept={(val) => setValue('expiryYear', val)}
-              />
-              {errors.expiryYear && <p className="text-xs text-red-500">{errors.expiryYear.message}</p>}
-            </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-slate-700">CVV</label>
-              <IMaskInput
-                mask="0000"
-                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
-                placeholder="123"
-                onAccept={(val) => setValue('cvv', val)}
-              />
-              {errors.cvv && <p className="text-xs text-red-500">{errors.cvv.message}</p>}
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-slate-700">CPF do Titular</label>
-            <IMaskInput
-              mask="000.000.000-00"
-              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
-              placeholder="000.000.000-00"
-              onAccept={(val) => setValue('cpf', val)}
-            />
-            {errors.cpf && <p className="text-xs text-red-500">{errors.cpf.message}</p>}
-          </div>
+        <div className="rounded-xl border border-dashed border-slate-200 p-4 text-center text-sm text-slate-400">
+          Nenhum cartão vinculado à conta
         </div>
       )}
 
-      <Button type="submit" size="lg" className="w-full">
+      <Button type="button" size="lg" className="w-full" onClick={handlePay} disabled={!card}>
         <Lock size={16} />
         Pagar {formatCurrency(total)}
       </Button>
       <p className="text-center text-xs text-slate-400">
         Pagamento seguro processado pelo Mercado Pago
       </p>
-    </form>
+    </div>
   )
 }
