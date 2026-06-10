@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Providers>
           <GlobalLoader />
           {children}
-          <Toaster position="top-center" richColors closeButton />
+          <Toaster position="top-center" richColors closeButton offset="72px" />
         </Providers>
       </body>
     </html>
