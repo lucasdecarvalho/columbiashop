@@ -15,14 +15,11 @@ interface ProductDetailProps {
   onAddToCart: (product: Product, qty: number) => void
 }
 
-function DetailContent({ product, onClose, onAddToCart }: ProductDetailProps) {
-  const [qty, setQty] = useState(1)
-  if (!product) return null
-
+function DetailBody({ product }: { product: Product }) {
   return (
     <div className="flex flex-col gap-4">
       {product.image_url && (
-        <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-slate-50">
+        <div className="relative w-full overflow-hidden rounded-xl bg-slate-50" style={{ aspectRatio: '4/3' }}>
           <Image
             src={product.image_url}
             alt={product.title}
@@ -40,34 +37,38 @@ function DetailContent({ product, onClose, onAddToCart }: ProductDetailProps) {
         <span className="text-2xl font-bold text-brand-600">{formatCurrency(product.price)}</span>
         <span className="text-sm text-slate-400">{product.stock} disponíveis</span>
       </div>
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2 rounded-lg border border-slate-200">
-          <button
-            onClick={() => setQty((q) => Math.max(1, q - 1))}
-            className="p-2 text-slate-500 hover:text-slate-900 transition-colors"
-          >
-            <Minus size={16} />
-          </button>
-          <span className="w-8 text-center text-sm font-semibold text-slate-900">{qty}</span>
-          <button
-            onClick={() => setQty((q) => Math.min(product.stock, q + 1))}
-            className="p-2 text-slate-500 hover:text-slate-900 transition-colors"
-          >
-            <Plus size={16} />
-          </button>
-        </div>
-        <Button
-          className="flex-1"
-          disabled={product.stock === 0}
-          onClick={() => {
-            onAddToCart(product, qty)
-            onClose()
-          }}
+    </div>
+  )
+}
+
+function ActionBar({ product, onClose, onAddToCart }: ProductDetailProps) {
+  const [qty, setQty] = useState(1)
+  if (!product) return null
+  return (
+    <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 rounded-lg border border-slate-200">
+        <button
+          onClick={() => setQty((q) => Math.max(1, q - 1))}
+          className="p-2 text-slate-500 hover:text-slate-900 transition-colors"
         >
-          <ShoppingCart size={16} />
-          Adicionar
-        </Button>
+          <Minus size={16} />
+        </button>
+        <span className="w-8 text-center text-sm font-semibold text-slate-900">{qty}</span>
+        <button
+          onClick={() => setQty((q) => Math.min(product.stock, q + 1))}
+          className="p-2 text-slate-500 hover:text-slate-900 transition-colors"
+        >
+          <Plus size={16} />
+        </button>
       </div>
+      <Button
+        className="flex-1"
+        disabled={product.stock === 0}
+        onClick={() => { onAddToCart(product, qty); onClose() }}
+      >
+        <ShoppingCart size={16} />
+        Adicionar
+      </Button>
     </div>
   )
 }
@@ -79,14 +80,23 @@ export function ProductDetail({ product, onClose, onAddToCart }: ProductDetailPr
   if (isDesktop) {
     return (
       <Modal open={open} onClose={onClose} size="lg">
-        <DetailContent product={product} onClose={onClose} onAddToCart={onAddToCart} />
+        {product && (
+          <div className="flex flex-col gap-4">
+            <DetailBody product={product} />
+            <ActionBar product={product} onClose={onClose} onAddToCart={onAddToCart} />
+          </div>
+        )}
       </Modal>
     )
   }
 
   return (
-    <Drawer open={open} onClose={onClose}>
-      <DetailContent product={product} onClose={onClose} onAddToCart={onAddToCart} />
+    <Drawer
+      open={open}
+      onClose={onClose}
+      footer={<ActionBar product={product} onClose={onClose} onAddToCart={onAddToCart} />}
+    >
+      {product && <DetailBody product={product} />}
     </Drawer>
   )
 }

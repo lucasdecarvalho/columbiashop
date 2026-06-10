@@ -1,16 +1,22 @@
 'use client'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X } from 'lucide-react'
-import { ReactNode } from 'react'
+import { ReactNode, useEffect } from 'react'
 
 interface DrawerProps {
   open: boolean
   onClose: () => void
   children: ReactNode
+  footer?: ReactNode
   title?: string
 }
 
-export function Drawer({ open, onClose, children, title }: DrawerProps) {
+export function Drawer({ open, onClose, children, footer, title }: DrawerProps) {
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [open])
+
   return (
     <AnimatePresence>
       {open && (
@@ -33,23 +39,34 @@ export function Drawer({ open, onClose, children, title }: DrawerProps) {
             onDragEnd={(_, info) => {
               if (info.offset.y > 120) onClose()
             }}
-            className="fixed bottom-0 left-0 right-0 z-50 max-h-[90vh] overflow-hidden rounded-t-3xl bg-white shadow-2xl"
+            className="fixed bottom-0 left-0 right-0 z-50 flex flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl"
+            style={{ height: '93dvh' }}
           >
-            <div className="flex justify-center pt-3 pb-1">
+            {/* Handle + close button */}
+            <div className="flex items-center justify-between px-4 pt-3 pb-1 shrink-0">
+              <div className="w-8" />
               <div className="h-1 w-12 rounded-full bg-slate-300" />
+              <button
+                onClick={onClose}
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors"
+              >
+                <X size={16} />
+              </button>
             </div>
+
             {title && (
-              <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
+              <div className="border-b border-slate-100 px-6 py-3 shrink-0">
                 <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
-                <button
-                  onClick={onClose}
-                  className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 transition-colors"
-                >
-                  <X size={18} />
-                </button>
               </div>
             )}
-            <div className="overflow-y-auto max-h-[80vh] px-6 pb-8">{children}</div>
+
+            <div className="flex-1 overflow-y-auto px-6 pt-2 pb-4">{children}</div>
+
+            {footer && (
+              <div className="shrink-0 border-t border-slate-100 bg-white px-6 py-4">
+                {footer}
+              </div>
+            )}
           </motion.div>
         </>
       )}
