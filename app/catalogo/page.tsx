@@ -42,7 +42,7 @@ export default function CatalogoPage() {
       <Navbar />
       <main className="flex-1">
         {/* Hero */}
-        <div className="bg-gradient-to-r from-indigo-600 to-indigo-800 py-16 px-4 text-center">
+        <div className="bg-gradient-to-r from-brand-600 to-brand-800 py-16 px-4 text-center">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -54,7 +54,7 @@ export default function CatalogoPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="mt-2 text-indigo-200"
+            className="mt-2 text-brand-200"
           >
             Produtos de qualidade com entrega rápida
           </motion.p>

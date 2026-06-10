@@ -79,8 +79,8 @@ export default function AdminProdutosPage() {
     <div>
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100">
-            <Package size={18} className="text-indigo-600" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-100">
+            <Package size={18} className="text-brand-600" />
           </div>
           <div>
             <h1 className="text-xl font-bold text-slate-900">Produtos</h1>
@@ -118,7 +118,7 @@ export default function AdminProdutosPage() {
                 <h3 className="font-semibold text-slate-900 line-clamp-1">{product.title}</h3>
                 <p className="mt-1 text-xs text-slate-400 line-clamp-2">{product.description}</p>
                 <div className="mt-3 flex items-center justify-between">
-                  <span className="text-base font-bold text-indigo-600">{formatCurrency(product.price)}</span>
+                  <span className="text-base font-bold text-brand-600">{formatCurrency(product.price)}</span>
                   <span className={`text-xs font-medium ${product.stock === 0 ? 'text-red-500' : 'text-slate-400'}`}>
                     {product.stock} em estoque
                   </span>

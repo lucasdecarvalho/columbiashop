@@ -27,7 +27,7 @@ export function AdminSidebar() {
             className={cn(
               'flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-all whitespace-nowrap',
               pathname === href
-                ? 'bg-indigo-50 text-indigo-700'
+                ? 'bg-brand-50 text-brand-700'
                 : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
             )}
           >
@@ -36,7 +36,7 @@ export function AdminSidebar() {
           </Link>
         ))}
         <button
-          onClick={() => signOut({ callbackUrl: '/login' })}
+          onClick={() => signOut({ callbackUrl: '/admin/login' })}
           className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-red-500 hover:bg-red-50 transition-all mt-auto"
         >
           <LogOut size={16} />

@@ -88,8 +88,8 @@ export default function MeusCartoesPage() {
     <div>
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100">
-            <CreditCard size={18} className="text-indigo-600" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-100">
+            <CreditCard size={18} className="text-brand-600" />
           </div>
           <div>
             <h1 className="text-xl font-bold text-slate-900">Meus Cartões</h1>
@@ -122,8 +122,8 @@ export default function MeusCartoesPage() {
                       {card.brand} •••• {card.last_four}
                     </p>
                     {card.is_default && (
-                      <span className="flex items-center gap-0.5 rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-600">
-                        <Star size={10} className="fill-indigo-600" />
+                      <span className="flex items-center gap-0.5 rounded-full bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-600">
+                        <Star size={10} className="fill-brand-600" />
                         Principal
                       </span>
                     )}
@@ -158,7 +158,7 @@ export default function MeusCartoesPage() {
             <label className="text-sm font-medium text-slate-700">Últimos 4 dígitos</label>
             <IMaskInput
               mask="0000"
-              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
               placeholder="6351"
               onAccept={(val) => setValue('lastFour', val)}
             />
@@ -168,7 +168,7 @@ export default function MeusCartoesPage() {
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-slate-700">Bandeira</label>
             <select
-              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-indigo-500"
+              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-brand-500"
               {...register('brand')}
             >
               <option value="">Selecione...</option>
@@ -184,7 +184,7 @@ export default function MeusCartoesPage() {
               <label className="text-sm font-medium text-slate-700">Mês</label>
               <IMaskInput
                 mask="00"
-                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                 placeholder="11"
                 onAccept={(val) => setValue('expiryMonth', val)}
               />
@@ -193,7 +193,7 @@ export default function MeusCartoesPage() {
               <label className="text-sm font-medium text-slate-700">Ano</label>
               <IMaskInput
                 mask="0000"
-                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                 placeholder="2030"
                 onAccept={(val) => setValue('expiryYear', val)}
               />
@@ -201,7 +201,7 @@ export default function MeusCartoesPage() {
           </div>
 
           <label className="flex items-center gap-2 text-sm text-slate-600">
-            <input type="checkbox" className="accent-indigo-600" {...register('isDefault')} />
+            <input type="checkbox" className="accent-brand-600" {...register('isDefault')} />
             Definir como cartão principal
           </label>
 

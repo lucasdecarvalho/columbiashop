@@ -37,7 +37,7 @@ function DetailContent({ product, onClose, onAddToCart }: ProductDetailProps) {
         <p className="mt-2 text-sm leading-relaxed text-slate-500">{product.description}</p>
       </div>
       <div className="flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3">
-        <span className="text-2xl font-bold text-indigo-600">{formatCurrency(product.price)}</span>
+        <span className="text-2xl font-bold text-brand-600">{formatCurrency(product.price)}</span>
         <span className="text-sm text-slate-400">{product.stock} disponíveis</span>
       </div>
       <div className="flex items-center gap-3">
