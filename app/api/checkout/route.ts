@@ -60,22 +60,52 @@ export async function POST(req: NextRequest) {
   )
 
   // Determine card token for MP
-  let mpToken = null
+  let mpToken: string | null = null
+  let cardBrand = 'master'
+
   if (savedCardId) {
     const { data: savedCard } = await db
       .from('cards')
-      .select('mp_token')
+      .select('mp_token, brand')
       .eq('id', savedCardId)
       .eq('client_id', clientId)
       .single()
-    mpToken = savedCard?.mp_token
+    mpToken = savedCard?.mp_token ?? null
+    if (savedCard?.brand) cardBrand = brandToMpId(savedCard.brand)
+
+    if (!mpToken) {
+      await db.from('orders').update({ status: 'rejected' }).eq('id', order.id)
+      return NextResponse.json(
+        { error: 'Cartão salvo sem token de pagamento. Use um novo cartão.' },
+        { status: 422 }
+      )
+    }
+  }
+
+  if (!mpToken && card) {
+    cardBrand = detectBrand(card.number)
+    try {
+      mpToken = await createCardToken(card)
+    } catch (err: any) {
+      console.error('Card token error:', err)
+      await db.from('orders').update({ status: 'rejected' }).eq('id', order.id)
+      const msg = extractMpError(err)
+      return NextResponse.json({ error: msg }, { status: 422 })
+    }
+  }
+
+  if (!mpToken) {
+    await db.from('orders').update({ status: 'rejected' }).eq('id', order.id)
+    return NextResponse.json({ error: 'Dados do cartão não informados.' }, { status: 400 })
   }
 
   // Build MP payment payload
   const paymentPayload: Record<string, unknown> = {
     transaction_amount: Number(total),
     description: `ColumbiaShop - Pedido #${order.id.slice(-8).toUpperCase()}`,
-    payment_method_id: 'master',
+    payment_method_id: cardBrand,
+    token: mpToken,
+    installments: 1,
     payer: {
       email: client?.email || session.user?.email || 'test@test.com',
       identification: {
@@ -87,29 +117,17 @@ export async function POST(req: NextRequest) {
     external_reference: order.id,
   }
 
-  if (mpToken) {
-    paymentPayload.token = mpToken
-    paymentPayload.installments = 1
-  } else if (card) {
-    // For sandbox testing: use card data directly (requires tokenization via MP.js in prod)
-    // In sandbox, we create a token-like structure
-    paymentPayload.token = await createCardToken(card)
-    paymentPayload.installments = 1
-  }
-
   try {
     const payment = await mpPayment.create({
       body: paymentPayload,
       requestOptions: { idempotencyKey: order.id },
     })
 
-    // Update order with MP payment id
     await db
       .from('orders')
       .update({ mp_payment_id: String(payment.id), status: payment.status || 'pending' })
       .eq('id', order.id)
 
-    // If immediately approved, subtract stock
     if (payment.status === 'approved') {
       for (const item of items) {
         await db.rpc('decrement_stock', {
@@ -121,13 +139,35 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ status: payment.status, orderId: order.id })
   } catch (err: any) {
-    console.error('MP error:', err)
+    console.error('MP error:', JSON.stringify(err, null, 2))
     await db.from('orders').update({ status: 'rejected' }).eq('id', order.id)
-    return NextResponse.json(
-      { error: err?.cause?.message || 'Erro ao processar pagamento' },
-      { status: 422 }
-    )
+    return NextResponse.json({ error: extractMpError(err) }, { status: 422 })
   }
+}
+
+function extractMpError(err: any): string {
+  // MP SDK v2: cause is an array of {description, code}
+  const causes: any[] = Array.isArray(err?.cause) ? err.cause : []
+  if (causes.length > 0) return causes.map((c: any) => c.description || c.message || c.code).join('; ')
+  return err?.message || 'Erro ao processar pagamento'
+}
+
+function detectBrand(number: string): string {
+  const n = number.replace(/\s/g, '')
+  if (/^4/.test(n)) return 'visa'
+  if (/^5[1-5]/.test(n) || /^2[2-7]/.test(n)) return 'master'
+  if (/^3[47]/.test(n)) return 'amex'
+  if (/^636368|^438935|^504175|^451416|^509048|^509067|^509049/.test(n)) return 'elo'
+  if (/^606282/.test(n)) return 'hipercard'
+  return 'master'
+}
+
+function brandToMpId(brand: string): string {
+  const map: Record<string, string> = {
+    mastercard: 'master', visa: 'visa', elo: 'elo',
+    amex: 'amex', hipercard: 'hipercard',
+  }
+  return map[brand.toLowerCase()] ?? 'master'
 }
 
 async function createCardToken(card: {
